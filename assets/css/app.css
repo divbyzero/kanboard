@@ -364,6 +364,15 @@ input.form-date {
     border-color: #ddd;
 }
 
+.alert ul {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.alert li {
+    margin-left: 25px;
+}
+
 /* labels */
 a.label {
     text-decoration: none;
@@ -522,6 +531,15 @@ nav .active a {
     border-bottom: 1px dotted red;
 }
 
+.page-header h2 a {
+    color: #ddd;
+}
+
+.page-header h2 a:focus,
+.page-header h2 a:hover {
+    color: #333;
+}
+
 .page-header ul {
     text-align: left;
     margin-top: 5px;
@@ -589,6 +607,7 @@ a.filter-on {
 #board th a {
     text-decoration: none;
     font-size: 150%;
+    color: #3366CC;
 }
 
 #board td {

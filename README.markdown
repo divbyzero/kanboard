@@ -31,7 +31,7 @@ Features
 - Host anywhere (shared hosting, VPS, Raspberry Pi or localhost)
 - No external dependencies
 - **Super easy setup**, copy and paste files and you are done!
-- Translated in 13 languages (Brazilian, Chinese, Danish, English, Finnish, French, German, Italian, Japanese, Polish, Russian, Spanish, Swedish)
+- Translated in 14 languages (Brazilian, Chinese, Danish, English, Finnish, French, German, Italian, Japanese, Polish, Russian, Spanish, Swedish, Thai)
 
 Known bugs and feature requests
 -------------------------------
@@ -60,6 +60,7 @@ Documentation
 - [Editing projects](docs/editing-projects.markdown)
 - [Sharing boards and tasks](docs/sharing-projects.markdown)
 - [Automatic actions](docs/automatic-actions.markdown)
+- [Project permissions](docs/project-permissions.markdown)
 
 #### Working with tasks
 
@@ -67,7 +68,12 @@ Documentation
 
 #### Working with users
 
-- [User management](docs/manage-users.markdown)
+- [User management](docs/user-management.markdown)
+
+#### Settings
+
+- [Application settings](docs/application-configuration.markdown)
+- [Board settings](docs/board-configuration.markdown)
 
 #### More
 
@@ -98,9 +104,12 @@ Documentation
 - [GitHub authentication](docs/github-authentication.markdown)
 - [Reverse proxy authentication](docs/reverse-proxy-authentication.markdown)
 
+### Integration
+
+- [Github webhooks](docs/github-webhooks.markdown)
+
 #### Developers and sysadmins
 
-- [Board configuration](docs/board-configuration.markdown)
 - [Email configuration](docs/email-configuration.markdown)
 - [Command line interface](docs/cli.markdown)
 - [Json-RPC API](docs/api-json-rpc.markdown)
@@ -133,8 +142,10 @@ Contributors:
 - Alex Butum
 - [Aleix Pol](https://github.com/aleixpol)
 - [Ashish Kulkarni](https://github.com/ashkulz)
+- [Chorgroup](https://github.com/chorgroup)
 - Claudio Lobo
 - [Cmer](https://github.com/chncsu)
+- [David-Norris](https://github.com/David-Norris)
 - [Fengchao](https://github.com/fengchao)
 - [Floaltvater](https://github.com/floaltvater)
 - [Gavlepeter](https://github.com/gavlepeter)
@@ -152,14 +163,16 @@ Contributors:
 - [Moraxy](https://github.com/moraxy)
 - [Nala Ginrut](https://github.com/NalaGinrut)
 - [Nekohayo](https://github.com/nekohayo)
+- [Nicolas Lœuillet](https://github.com/nicosomb)
 - [Nramel](https://github.com/nramel)
 - [Null-Kelvin](https://github.com/Null-Kelvin)
+- [Oliver Bertuch](https://github.com/poikilotherm)
 - [Olivier Maridat](https://github.com/oliviermaridat)
-- [Poikilotherm](https://github.com/poikilotherm)
 - [Rafaelrossa](https://github.com/rafaelrossa)
 - [Raphaël Doursenaud](https://github.com/rdoursenaud)
 - [Rzeka](https://github.com/rzeka)
-- [Sebastien pacilly](https://github.com/spacilly)
+- [Sebastien Pacilly](https://github.com/spacilly)
+- [Sebastian Reese](https://github.com/ReeseSebastian)
 - [Sylvain Veyrié](https://github.com/turb)
 - [Toomyem](https://github.com/Toomyem)
 - [Tony G. Bolaño](https://github.com/tonybolanyo)
