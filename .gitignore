@@ -56,3 +56,4 @@ Thumbs.db
 config.php
 data/files
 vendor
+composer.phar
