@@ -9,7 +9,7 @@ namespace Helper;
 use Core\Security;
 use Core\Template;
 use Core\Tool;
-use Parsedown\Parsedown;
+use Parsedown;
 
 /**
  * Append a CSRF token to a query string
@@ -75,6 +75,16 @@ function is_current_user($user_id)
 function is_admin()
 {
     return $_SESSION['user']['is_admin'] == 1;
+}
+
+/**
+ * Return true if the user can configure the project (project are previously filtered)
+ *
+ * @return boolean
+ */
+function is_project_admin(array $project)
+{
+    return is_admin() || $project['is_private'] == 1;
 }
 
 /**

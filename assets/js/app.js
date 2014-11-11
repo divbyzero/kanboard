@@ -18,6 +18,15 @@ var Kanboard = (function() {
 
     return {
 
+        // Return true if the element#id exists
+        Exists: function(id) {
+            if (document.getElementById(id)) {
+                return true;
+            }
+
+            return false;
+        },
+
         // Display a popup
         Popover: function(e, callback) {
             e.preventDefault();
@@ -88,7 +97,7 @@ var Kanboard = (function() {
             });
 
             $("#board-selector").change(function() {
-                window.location = "?controller=board&action=show&project_id=" + $(this).val();
+                window.location = $(this).attr("data-board-url").replace(/%d/g, $(this).val());
             });
         }
     };
@@ -131,9 +140,9 @@ Kanboard.Board = (function() {
         $(".task-description-popover").click(Kanboard.Popover);
 
         // Redirect to the task details page
-        $("[data-task-id]").each(function() {
+        $("[data-task-url]").each(function() {
             $(this).click(function() {
-                window.location = "?controller=task&action=show&task_id=" + $(this).attr("data-task-id");
+                window.location = $(this).attr("data-task-url");
             });
         });
 
@@ -148,28 +157,26 @@ Kanboard.Board = (function() {
     // Stop events
     function board_unload_events()
     {
-        $("[data-task-id]").off();
+        $("[data-task-url]").off();
         clearInterval(checkInterval);
     }
 
     // Save and refresh the board
     function board_save(taskId, columnId, position)
     {
-        var boardSelector = $("#board");
-        var projectId = boardSelector.attr("data-project-id");
-
         board_unload_events();
 
         $.ajax({
             cache: false,
-            url: "?controller=board&action=save&project_id=" + projectId,
-            data: {
+            url: $("#board").attr("data-save-url"),
+            contentType: "application/json",
+            type: "POST",
+            processData: false,
+            data: JSON.stringify({
                 "task_id": taskId,
                 "column_id": columnId,
                 "position": position,
-                "csrf_token": boardSelector.attr("data-csrf-token"),
-            },
-            type: "POST",
+            }),
             success: function(data) {
                 $("#board").remove();
                 $("#main").append(data);
@@ -182,17 +189,13 @@ Kanboard.Board = (function() {
     // Check if a board have been changed by someone else
     function board_check()
     {
-        var boardSelector = $("#board");
-        var projectId = boardSelector.attr("data-project-id");
-        var timestamp = boardSelector.attr("data-time");
-
-        if (Kanboard.IsVisible() && projectId != undefined && timestamp != undefined) {
+        if (Kanboard.IsVisible()) {
             $.ajax({
                 cache: false,
-                url: "?controller=board&action=check&project_id=" + projectId + "&timestamp=" + timestamp,
+                url: $("#board").attr("data-check-url"),
                 statusCode: {
                     200: function(data) {
-                        boardSelector.remove();
+                        $("#board").remove();
                         $("#main").append(data);
                         board_unload_events();
                         board_load_events();
@@ -264,15 +267,76 @@ Kanboard.Task = (function() {
         }
     };
 
-})();// Initialization
+})();
+Kanboard.Analytic = (function() {
+
+    return {
+        Init: function() {
+
+            if (Kanboard.Exists("analytic-repartition")) {
+                Kanboard.Analytic.Repartition.Init();
+            }
+        }
+    };
+
+})();
+
+Kanboard.Analytic.Repartition = (function() {
+
+    function fetchData()
+    {
+        jQuery.getJSON($("#chart").attr("data-url"), function(data) {
+            drawGraph(data.metrics, data.labels);
+        });
+    }
+
+    function drawGraph(metrics, labels)
+    {
+        var series = prepareSeries(metrics, labels);
+
+        var svg = dimple.newSvg("#chart", 700, 350);
+
+        var chart = new dimple.chart(svg, series);
+        chart.addMeasureAxis("p", labels["nb_tasks"]);
+        var ring = chart.addSeries(labels["column_title"], dimple.plot.pie);
+        ring.innerRadius = "50%";
+        chart.addLegend(0, 0, 100, 100, "left");
+        chart.draw();
+    }
+
+    function prepareSeries(metrics, labels)
+    {
+        var series = [];
+
+        for (var i = 0; i < metrics.length; i++) {
+
+            var serie = {};
+            serie[labels["nb_tasks"]] = metrics[i]["nb_tasks"];
+            serie[labels["column_title"]] = metrics[i]["column_title"];
+
+            series.push(serie);
+        }
+
+        return series;
+    }
+
+    return {
+        Init: fetchData
+    };
+
+})();
+// Initialization
 $(function() {
 
     Kanboard.Init();
 
-    if ($("#board").length) {
+    if (Kanboard.Exists("board")) {
         Kanboard.Board.Init();
     }
-    else if ($("#task-section").length) {
+    else if (Kanboard.Exists("task-section")) {
         Kanboard.Task.Init();
+    }
+    else if (Kanboard.Exists("analytic-section")) {
+        Kanboard.Analytic.Init();
     }
 });

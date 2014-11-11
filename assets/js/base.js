@@ -3,6 +3,15 @@ var Kanboard = (function() {
 
     return {
 
+        // Return true if the element#id exists
+        Exists: function(id) {
+            if (document.getElementById(id)) {
+                return true;
+            }
+
+            return false;
+        },
+
         // Display a popup
         Popover: function(e, callback) {
             e.preventDefault();
@@ -73,7 +82,7 @@ var Kanboard = (function() {
             });
 
             $("#board-selector").change(function() {
-                window.location = "?controller=board&action=show&project_id=" + $(this).val();
+                window.location = $(this).attr("data-board-url").replace(/%d/g, $(this).val());
             });
         }
     };

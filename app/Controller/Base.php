@@ -26,6 +26,7 @@ use Model\LastLogin;
  * @property \Model\Notification       $notification
  * @property \Model\Project            $project
  * @property \Model\ProjectPermission  $projectPermission
+ * @property \Model\ProjectAnalytic    $projectAnalytic
  * @property \Model\SubTask            $subTask
  * @property \Model\Task               $task
  * @property \Model\TaskHistory        $taskHistory
@@ -173,7 +174,7 @@ abstract class Base
      */
     public function notfound($no_layout = false)
     {
-        $this->response->html($this->template->layout('app_notfound', array(
+        $this->response->html($this->template->layout('app/notfound', array(
             'title' => t('Page not found'),
             'no_layout' => $no_layout,
         )));
@@ -187,7 +188,7 @@ abstract class Base
      */
     public function forbidden($no_layout = false)
     {
-        $this->response->html($this->template->layout('app_forbidden', array(
+        $this->response->html($this->template->layout('app/forbidden', array(
             'title' => t('Access Forbidden'),
             'no_layout' => $no_layout,
         )));
