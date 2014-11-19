@@ -2,9 +2,13 @@
 
 namespace Controller;
 
+use Pimple\Container;
 use Core\Tool;
-use Core\Registry;
 use Core\Security;
+use Core\Request;
+use Core\Response;
+use Core\Template;
+use Core\Session;
 use Model\LastLogin;
 
 /**
@@ -45,64 +49,80 @@ abstract class Base
     /**
      * Request instance
      *
-     * @accesss public
-     * @var \Core\Request
+     * @accesss protected
+     * @var Core\Request
      */
-    public $request;
+    protected $request;
 
     /**
      * Response instance
      *
-     * @accesss public
-     * @var \Core\Response
+     * @accesss protected
+     * @var Core\Response
      */
-    public $response;
+    protected $response;
 
     /**
      * Template instance
      *
-     * @accesss public
-     * @var \Core\Template
+     * @accesss protected
+     * @var Core\Template
      */
-    public $template;
+    protected $template;
 
     /**
      * Session instance
      *
      * @accesss public
-     * @var \Core\Session
+     * @var Core\Session
      */
-    public $session;
+    protected $session;
 
     /**
-     * Registry instance
+     * Container instance
      *
      * @access private
-     * @var \Core\Registry
+     * @var Pimple\Container
      */
-    private $registry;
+    private $container;
 
     /**
      * Constructor
      *
      * @access public
-     * @param  \Core\Registry  $registry   Registry instance
+     * @param  Pimple\Container   $container
      */
-    public function __construct(Registry $registry)
+    public function __construct(Container $container)
     {
-        $this->registry = $registry;
+        $this->container = $container;
+        $this->request = new Request;
+        $this->response = new Response;
+        $this->session = new Session;
+        $this->template = new Template;
+    }
+
+    /**
+     * Destructor
+     *
+     * @access public
+     */
+    public function __destruct()
+    {
+        // foreach ($this->container['db']->getLogMessages() as $message) {
+        //     $this->container['logger']->addDebug($message);
+        // }
     }
 
     /**
      * Load automatically models
      *
      * @access public
-     * @param  string $name Model name
+     * @param  string    $name    Model name
      * @return mixed
      */
     public function __get($name)
     {
-        return Tool::loadModel($this->registry, $name);
+        return Tool::loadModel($this->container, $name);
     }
 
     /**
@@ -155,6 +175,7 @@ abstract class Base
     {
         $models = array(
             'projectActivity', // Order is important
+            'projectDailySummary',
             'action',
             'project',
             'webhook',

@@ -64,7 +64,7 @@ class Project extends Base
      *
      * @access public
      */
-    public function export()
+    public function exportTasks()
     {
         $project = $this->getProjectManagement();
         $from = $this->request->getStringParam('from');
@@ -72,14 +72,14 @@ class Project extends Base
 
         if ($from && $to) {
             $data = $this->taskExport->export($project['id'], $from, $to);
-            $this->response->forceDownload('Export_'.date('Y_m_d_H_i_S').'.csv');
+            $this->response->forceDownload('Tasks_'.date('Y_m_d_H_i').'.csv');
             $this->response->csv($data);
         }
 
-        $this->response->html($this->projectLayout('project_export', array(
+        $this->response->html($this->projectLayout('project/export_tasks', array(
             'values' => array(
                 'controller' => 'project',
-                'action' => 'export',
+                'action' => 'exportTasks',
                 'project_id' => $project['id'],
                 'from' => $from,
                 'to' => $to,
@@ -89,6 +89,39 @@ class Project extends Base
             'date_formats' => $this->dateParser->getAvailableFormats(),
             'project' => $project,
             'title' => t('Tasks Export')
+        )));
+    }
+
+    /**
+     * Daily project summary export
+     *
+     * @access public
+     */
+    public function exportDailyProjectSummary()
+    {
+        $project = $this->getProjectManagement();
+        $from = $this->request->getStringParam('from');
+        $to = $this->request->getStringParam('to');
+
+        if ($from && $to) {
+            $data = $this->ProjectDailySummary->getAggregatedMetrics($project['id'], $from, $to);
+            $this->response->forceDownload('Daily_Summary_'.date('Y_m_d_H_i').'.csv');
+            $this->response->csv($data);
+        }
+
+        $this->response->html($this->projectLayout('project/export_daily_summary', array(
+            'values' => array(
+                'controller' => 'project',
+                'action' => 'exportDailyProjectSummary',
+                'project_id' => $project['id'],
+                'from' => $from,
+                'to' => $to,
+            ),
+            'errors' => array(),
+            'date_format' => $this->config->get('application_date_format'),
+            'date_formats' => $this->dateParser->getAvailableFormats(),
+            'project' => $project,
+            'title' => t('Daily project summary export')
         )));
     }
 
@@ -428,8 +461,8 @@ class Project extends Base
         $limit = 25;
 
         if ($search !== '') {
-            $tasks = $this->taskFinder->search($project['id'], $search, $offset, $limit, $order, $direction);
-            $nb_tasks = $this->taskFinder->countSearch($project['id'], $search);
+            $tasks = $this->taskPaginator->searchTasks($project['id'], $search, $offset, $limit, $order, $direction);
+            $nb_tasks = $this->taskPaginator->countSearchTasks($project['id'], $search);
         }
 
         $this->response->html($this->template->layout('project_search', array(
@@ -472,8 +505,8 @@ class Project extends Base
         $offset = $this->request->getIntegerParam('offset', 0);
         $limit = 25;
 
-        $tasks = $this->taskFinder->getClosedTasks($project['id'], $offset, $limit, $order, $direction);
-        $nb_tasks = $this->taskFinder->countByProjectId($project['id'], array(TaskModel::STATUS_CLOSED));
+        $tasks = $this->taskPaginator->closedTasks($project['id'], $offset, $limit, $order, $direction);
+        $nb_tasks = $this->taskPaginator->countClosedTasks($project['id']);
 
         $this->response->html($this->template->layout('project_tasks', array(
             'board_selector' => $this->projectPermission->getAllowedProjects($this->acl->getUserId()),
