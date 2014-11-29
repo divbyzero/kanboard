@@ -15,7 +15,11 @@ use Core\Tool;
  * @property \Model\Acl                $acl
  * @property \Model\Comment            $comment
  * @property \Model\Task               $task
+ * @property \Model\TaskCreation       $taskCreation
+ * @property \Model\TaskModification   $taskModification
+ * @property \Model\TaskDuplication    $taskDuplication
  * @property \Model\TaskFinder         $taskFinder
+ * @property \Model\TaskStatus         $taskStatus
  */
 abstract class Base implements Listener
 {
@@ -47,7 +51,7 @@ abstract class Base implements Listener
      * Container instance
      *
      * @access protected
-     * @var Pimple\Container
+     * @var \Pimple\Container
      */
     protected $container;
 
@@ -101,9 +105,9 @@ abstract class Base implements Listener
      * Constructor
      *
      * @access public
-     * @param  Pimple\Container   $container        Container
-     * @param  integer            $project_id       Project id
-     * @param  string             $event_name       Attached event name
+     * @param  \Pimple\Container   $container        Container
+     * @param  integer             $project_id       Project id
+     * @param  string              $event_name       Attached event name
      */
     public function __construct(Container $container, $project_id, $event_name)
     {

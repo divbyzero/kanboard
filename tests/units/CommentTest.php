@@ -3,6 +3,7 @@
 require_once __DIR__.'/Base.php';
 
 use Model\Task;
+use Model\TaskCreation;
 use Model\Project;
 use Model\Comment;
 
@@ -11,12 +12,12 @@ class CommentTest extends Base
     public function testCreate()
     {
         $c = new Comment($this->container);
-        $t = new Task($this->container);
+        $tc = new TaskCreation($this->container);
         $p = new Project($this->container);
 
         $this->assertEquals(1, $p->create(array('name' => 'test1')));
-        $this->assertEquals(1, $t->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
-        $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'bla bla', 'user_id' => 1)));
+        $this->assertEquals(1, $tc->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
+        $this->assertNotFalse($c->create(array('task_id' => 1, 'comment' => 'bla bla', 'user_id' => 1)));
 
         $comment = $c->getById(1);
 
@@ -31,14 +32,14 @@ class CommentTest extends Base
     public function testGetAll()
     {
         $c = new Comment($this->container);
-        $t = new Task($this->container);
+        $tc = new TaskCreation($this->container);
         $p = new Project($this->container);
 
         $this->assertEquals(1, $p->create(array('name' => 'test1')));
-        $this->assertEquals(1, $t->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
-        $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'c1', 'user_id' => 1)));
-        $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'c2', 'user_id' => 1)));
-        $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'c3', 'user_id' => 1)));
+        $this->assertEquals(1, $tc->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
+        $this->assertNotFalse($c->create(array('task_id' => 1, 'comment' => 'c1', 'user_id' => 1)));
+        $this->assertNotFalse($c->create(array('task_id' => 1, 'comment' => 'c2', 'user_id' => 1)));
+        $this->assertNotFalse($c->create(array('task_id' => 1, 'comment' => 'c3', 'user_id' => 1)));
 
         $comments = $c->getAll(1);
 
@@ -54,12 +55,12 @@ class CommentTest extends Base
     public function testUpdate()
     {
         $c = new Comment($this->container);
-        $t = new Task($this->container);
+        $tc = new TaskCreation($this->container);
         $p = new Project($this->container);
 
         $this->assertEquals(1, $p->create(array('name' => 'test1')));
-        $this->assertEquals(1, $t->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
-        $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'c1', 'user_id' => 1)));
+        $this->assertEquals(1, $tc->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
+        $this->assertNotFalse($c->create(array('task_id' => 1, 'comment' => 'c1', 'user_id' => 1)));
         $this->assertTrue($c->update(array('id' => 1, 'comment' => 'bla')));
 
         $comment = $c->getById(1);
@@ -70,11 +71,11 @@ class CommentTest extends Base
     public function validateRemove()
     {
         $c = new Comment($this->container);
-        $t = new Task($this->container);
+        $tc = new TaskCreation($this->container);
         $p = new Project($this->container);
 
         $this->assertEquals(1, $p->create(array('name' => 'test1')));
-        $this->assertEquals(1, $t->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
+        $this->assertEquals(1, $tc->create(array('title' => 'test', 'project_id' => 1, 'column_id' => 3, 'owner_id' => 1)));
         $this->assertTrue($c->create(array('task_id' => 1, 'comment' => 'c1', 'user_id' => 1)));
 
         $this->assertTrue($c->remove(1));

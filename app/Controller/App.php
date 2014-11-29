@@ -3,7 +3,8 @@
 namespace Controller;
 
 use Model\Project as ProjectModel;
-use Model\SubTask;
+use Model\SubTask as SubTaskModel;
+use Helper;
 
 /**
  * Application controller
@@ -51,7 +52,7 @@ class App extends Base
     {
         $limit = 10;
 
-        if (! in_array($order, array('tasks.id', 'project_name', 'title'))) {
+        if (! in_array($order, array('tasks.id', 'project_name', 'title', 'date_due'))) {
             $order = 'tasks.id';
             $direction = 'ASC';
         }
@@ -86,7 +87,7 @@ class App extends Base
      */
     private function getSubtaskPagination($user_id, $paginate, $offset, $order, $direction)
     {
-        $status = array(SubTask::STATUS_TODO, SubTask::STATUS_INPROGRESS);
+        $status = array(SubTaskModel::STATUS_TODO, SubTaskModel::STATUS_INPROGRESS);
         $limit = 10;
 
         if (! in_array($order, array('tasks.id', 'project_name', 'status', 'title'))) {
@@ -153,4 +154,22 @@ class App extends Base
             )
         );
     }
+
+    /**
+     * Render Markdown Text and reply with the HTML Code
+     *
+     * @access public
+     */
+    public function preview()
+    {
+        $payload = $this->request->getJson();
+
+        if (empty($payload['text'])) {
+            $this->response->html('<p>'.t('Nothing to preview...').'</p>');
+        }
+        else {
+            $this->response->html(Helper\markdown($payload['text']));
+        }
+    }
+
 }

@@ -46,6 +46,34 @@ class Category extends Base
     }
 
     /**
+     * Get the category name by the id
+     *
+     * @access public
+     * @param  integer   $category_id    Category id
+     * @return string
+     */
+    public function getNameById($category_id)
+    {
+        return $this->db->table(self::TABLE)->eq('id', $category_id)->findOneColumn('name') ?: '';
+    }
+
+    /**
+     * Get a category id by the project and the name
+     *
+     * @access public
+     * @param  integer   $project_id      Project id
+     * @param  string    $category_name   Category name
+     * @return integer
+     */
+    public function getIdByName($project_id, $category_name)
+    {
+        return (int) $this->db->table(self::TABLE)
+                        ->eq('project_id', $project_id)
+                        ->eq('name', $category_name)
+                        ->findOneColumn('id');
+    }
+
+    /**
      * Return the list of all categories
      *
      * @access public
@@ -94,11 +122,11 @@ class Category extends Base
      *
      * @access public
      * @param  array    $values    Form values
-     * @return bool
+     * @return bool|integer
      */
     public function create(array $values)
     {
-        return $this->db->table(self::TABLE)->save($values);
+        return $this->persist(self::TABLE, $values);
     }
 
     /**

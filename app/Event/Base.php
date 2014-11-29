@@ -25,7 +25,7 @@ abstract class Base implements Listener
      * Container instance
      *
      * @access protected
-     * @var Pimple\Container
+     * @var \Pimple\Container
      */
     protected $container;
 
@@ -33,7 +33,7 @@ abstract class Base implements Listener
      * Constructor
      *
      * @access public
-     * @param  Pimple\Container    $container
+     * @param  \Pimple\Container    $container
      */
     public function __construct(Container $container)
     {

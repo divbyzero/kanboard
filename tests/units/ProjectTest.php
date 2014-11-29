@@ -6,6 +6,7 @@ use Model\Project;
 use Model\ProjectPermission;
 use Model\User;
 use Model\Task;
+use Model\TaskCreation;
 use Model\Acl;
 use Model\Board;
 
@@ -48,7 +49,7 @@ class ProjectTest extends Base
     public function testIsLastModified()
     {
         $p = new Project($this->container);
-        $t = new Task($this->container);
+        $tc = new TaskCreation($this->container);
 
         $now = time();
         $p->attachEvents();
@@ -61,7 +62,7 @@ class ProjectTest extends Base
 
         sleep(1);
 
-        $this->assertEquals(1, $t->create(array('title' => 'Task #1', 'project_id' => 1)));
+        $this->assertEquals(1, $tc->create(array('title' => 'Task #1', 'project_id' => 1)));
         $this->assertTrue($this->container['event']->isEventTriggered(Task::EVENT_CREATE));
         $this->assertEquals('Event\ProjectModificationDateListener', $this->container['event']->getLastListenerExecuted());
 
@@ -155,7 +156,7 @@ class ProjectTest extends Base
         $this->assertEmpty($project['token']);
 
         // Clone private project
-        $this->assertEquals(3, $p->create(array('name' => 'Private', 'is_private' => 1), 1));
+        $this->assertEquals(3, $p->create(array('name' => 'Private', 'is_private' => 1), 1, true));
         $this->assertEquals(4, $p->duplicate(3));
 
         $project = $p->getById(4);

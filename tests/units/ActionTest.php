@@ -6,11 +6,13 @@ use Model\Action;
 use Model\Project;
 use Model\Board;
 use Model\Task;
+use Model\TaskPosition;
+use Model\TaskCreation;
 use Model\TaskFinder;
 use Model\Category;
 
 class ActionTest extends Base
-{
+{/*
     public function testFetchActions()
     {
         $action = new Action($this->container);
@@ -49,7 +51,8 @@ class ActionTest extends Base
 
     public function testEventMoveColumn()
     {
-        $task = new Task($this->container);
+        $tp = new TaskPosition($this->container);
+        $tc = new TaskCreation($this->container);
         $tf = new TaskFinder($this->container);
         $board = new Board($this->container);
         $project = new Project($this->container);
@@ -59,7 +62,7 @@ class ActionTest extends Base
         $this->assertEquals(1, $project->create(array('name' => 'unit_test')));
 
         // We create a task
-        $this->assertEquals(1, $task->create(array(
+        $this->assertEquals(1, $tc->create(array(
             'title' => 'unit_test',
             'project_id' => 1,
             'owner_id' => 1,
@@ -86,7 +89,7 @@ class ActionTest extends Base
         $this->assertEquals(1, $t1['column_id']);
 
         // We move our task
-        $task->movePosition(1, 1, 4, 1);
+        $tp->movePosition(1, 1, 4, 1);
 
         $this->assertTrue($this->container['event']->isEventTriggered(Task::EVENT_MOVE_COLUMN));
         $this->assertFalse($this->container['event']->isEventTriggered(Task::EVENT_UPDATE));
@@ -96,10 +99,11 @@ class ActionTest extends Base
         $this->assertEquals(4, $t1['column_id']);
         $this->assertEquals(0, $t1['is_active']);
     }
-
+*/
     public function testExecuteMultipleActions()
     {
-        $task = new Task($this->container);
+        $tp = new TaskPosition($this->container);
+        $tc = new TaskCreation($this->container);
         $tf = new TaskFinder($this->container);
         $board = new Board($this->container);
         $project = new Project($this->container);
@@ -110,7 +114,7 @@ class ActionTest extends Base
         $this->assertEquals(2, $project->create(array('name' => 'unit_test2')));
 
         // We create a task
-        $this->assertEquals(1, $task->create(array(
+        $this->assertEquals(1, $tc->create(array(
             'title' => 'unit_test',
             'project_id' => 1,
             'owner_id' => 1,
@@ -152,10 +156,10 @@ class ActionTest extends Base
         $this->assertEquals(1, $t1['project_id']);
 
         // We move our task
-        $task->movePosition(1, 1, 4, 1);
+        $tp->movePosition(1, 1, 4, 1);
 
-        $this->assertTrue($this->container['event']->isEventTriggered(Task::EVENT_CLOSE));
         $this->assertTrue($this->container['event']->isEventTriggered(Task::EVENT_MOVE_COLUMN));
+        $this->assertTrue($this->container['event']->isEventTriggered(Task::EVENT_CLOSE));
 
         // Our task should be closed
         $t1 = $tf->getById(1);

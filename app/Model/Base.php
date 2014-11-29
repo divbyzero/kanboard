@@ -31,9 +31,11 @@ use PicoDb\Database;
  * @property \Model\SubTask            $subTask
  * @property \Model\SubtaskHistory     $subtaskHistory
  * @property \Model\Task               $task
+ * @property \Model\TaskCreation       $taskCreation
  * @property \Model\TaskExport         $taskExport
  * @property \Model\TaskFinder         $taskFinder
  * @property \Model\TaskHistory        $taskHistory
+ * @property \Model\TaskPosition       $taskPosition
  * @property \Model\TaskValidator      $taskValidator
  * @property \Model\TimeTracking       $timeTracking
  * @property \Model\User               $user
@@ -61,7 +63,7 @@ abstract class Base
      * Container instance
      *
      * @access protected
-     * @var Pimple\Container
+     * @var \Pimple\Container
      */
     protected $container;
 
@@ -69,7 +71,7 @@ abstract class Base
      * Constructor
      *
      * @access public
-     * @param  Pimple\Container   $container
+     * @param  \Pimple\Container   $container
      */
     public function __construct(Container $container)
     {
@@ -88,6 +90,26 @@ abstract class Base
     public function __get($name)
     {
         return Tool::loadModel($this->container, $name);
+    }
+
+    /**
+     * Save a record in the database
+     *
+     * @access public
+     * @param  string            $table      Table name
+     * @param  array             $values     Form values
+     * @return boolean|integer
+     */
+    public function persist($table, array $values)
+    {
+        return $this->db->transaction(function($db) use ($table, $values) {
+
+            if (! $db->table($table)->save($values)) {
+                return false;
+            }
+
+            return (int) $db->getConnection()->getLastId();
+        });
     }
 
     /**

@@ -104,7 +104,7 @@ class Project extends Base
         $to = $this->request->getStringParam('to');
 
         if ($from && $to) {
-            $data = $this->ProjectDailySummary->getAggregatedMetrics($project['id'], $from, $to);
+            $data = $this->projectDailySummary->getAggregatedMetrics($project['id'], $from, $to);
             $this->response->forceDownload('Daily_Summary_'.date('Y_m_d_H_i').'.csv');
             $this->response->csv($data);
         }
@@ -560,7 +560,7 @@ class Project extends Base
 
         if ($valid) {
 
-            $project_id = $this->project->create($values, $this->acl->getUserId());
+            $project_id = $this->project->create($values, $this->acl->getUserId(), true);
 
             if ($project_id) {
                 $this->session->flash(t('Your project have been created successfully.'));
